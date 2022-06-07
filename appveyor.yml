@@ -1,7 +1,6 @@
-platform: x64
+platform: x86
 
 image:
-- Visual Studio 2017
 - Visual Studio 2019
 
 environment:
@@ -19,13 +18,13 @@ for:
 -
   matrix:
     only:
-      - image: Visual Studio 2017
+      - image: Visual Studio 2019
 
   environment:
-    LLVM_VERSION: 7.0.0
+    LLVM_VERSION: 13.0.0
     LLVM_HASH: 74b197a3959b0408adf0824be01db8dddfa2f9a967f4085af3fad900ed5fdbf6
-    VCVARSALL: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat'
-    QT_PREFIX: 'C:\Qt\latest\msvc2017_64\lib\cmake'
+    VCVARSALL: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat'
+    QT_PREFIX: 'C:\Qt\5.15.2\msvc2019\lib\cmake'
 
 cache:
   - '%APPVEYOR_BUILD_FOLDER%\.git\modules'
@@ -41,11 +40,11 @@ install:
   - git submodule update --init
   - git submodule foreach git submodule update --init
   - ps: |
-      if (!(Test-Path "LLVM-$env:LLVM_VERSION-win64.exe")) {
-          appveyor DownloadFile "https://releases.llvm.org/$env:LLVM_VERSION/LLVM-$env:LLVM_VERSION-win64.exe"
+      if (!(Test-Path "LLVM-$env:LLVM_VERSION-win32.exe")) {
+          appveyor DownloadFile "https://releases.llvm.org/$env:LLVM_VERSION/LLVM-$env:LLVM_VERSION-win32.exe"
       }
-      scripts\check-sha256.ps1 LLVM-$env:LLVM_VERSION-win64.exe "$env:LLVM_HASH"
-      Start-Process -FilePath "LLVM-$env:LLVM_VERSION-win64.exe" -ArgumentList '/S',"/D=C:\LLVM-$env:LLVM_VERSION" -Wait
+      scripts\check-sha256.ps1 LLVM-$env:LLVM_VERSION-win32.exe "$env:LLVM_HASH"
+      Start-Process -FilePath "LLVM-$env:LLVM_VERSION-win32.exe" -ArgumentList '/S',"/D=C:\LLVM-$env:LLVM_VERSION" -Wait
   - ps: |
       if (!(Test-Path cmake-3.10.1-win64-x64.zip)) {
           appveyor DownloadFile https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.zip
@@ -66,7 +65,7 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%\build
 
 build_script:
-  - call "%VCVARSALL%" amd64
+  - call "%VCVARSALL%" x86
   - cmake -G "Ninja"
       -DCMAKE_BUILD_TYPE=%CONFIGURATION%
       -DCMAKE_MAKE_PROGRAM="%APPVEYOR_BUILD_FOLDER%\platform\qt\ninja.exe"
