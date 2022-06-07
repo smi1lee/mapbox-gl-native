@@ -21,8 +21,8 @@ for:
       - image: Visual Studio 2019
 
   environment:
-    LLVM_VERSION: 13.0.0
-    LLVM_HASH: 74b197a3959b0408adf0824be01db8dddfa2f9a967f4085af3fad900ed5fdbf6
+    LLVM_VERSION: 14.0.0
+    LLVM_HASH: cf5a61c803a86a2daeb282ea07a9b52479111e834e0739fc89cf2a5cd5e57ff6               
     VCVARSALL: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat'
     QT_PREFIX: 'C:\Qt\5.15.2\msvc2019\lib\cmake'
 
