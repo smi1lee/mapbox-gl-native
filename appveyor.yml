@@ -22,8 +22,8 @@ for:
 
   environment:
     LLVM_VERSION: 14.0.0
-    LLVM_HASH: cf5a61c803a86a2daeb282ea07a9b52479111e834e0739fc89cf2a5cd5e57ff6               
-    VCVARSALL: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat'
+#     LLVM_HASH: cf5a61c803a86a2daeb282ea07a9b52479111e834e0739fc89cf2a5cd5e57ff6               
+#     VCVARSALL: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat'
     QT_PREFIX: 'C:\Qt\5.15.2\msvc2019\lib\cmake'
 
 cache:
@@ -39,22 +39,22 @@ install:
   - git submodule sync
   - git submodule update --init
   - git submodule foreach git submodule update --init
-  - ps: |
-      if (!(Test-Path "LLVM-$env:LLVM_VERSION-win32.exe")) {
-          appveyor DownloadFile "https://releases.llvm.org/$env:LLVM_VERSION/LLVM-$env:LLVM_VERSION-win32.exe"
-      }
-      scripts\check-sha256.ps1 LLVM-$env:LLVM_VERSION-win32.exe "$env:LLVM_HASH"
-      Start-Process -FilePath "LLVM-$env:LLVM_VERSION-win32.exe" -ArgumentList '/S',"/D=C:\LLVM-$env:LLVM_VERSION" -Wait
-  - ps: |
-      if (!(Test-Path cmake-3.10.1-win64-x64.zip)) {
-          appveyor DownloadFile https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.zip
-      }
-      scripts\check-sha256.ps1 cmake-3.10.1-win64-x64.zip 8251F70C85B58F3CA1F24E4A3B0637E2D609B5E4A341D00B70E02E89244D5029
-      Start-Process -FilePath '7z' -ArgumentList 'x','cmake-3.10.1-win64-x64.zip','-oC:\' -Wait
+#   - ps: |
+#       if (!(Test-Path "LLVM-$env:LLVM_VERSION-win32.exe")) {
+#           appveyor DownloadFile "https://releases.llvm.org/$env:LLVM_VERSION/LLVM-$env:LLVM_VERSION-win32.exe"
+#       }
+#       scripts\check-sha256.ps1 LLVM-$env:LLVM_VERSION-win32.exe "$env:LLVM_HASH"
+#       Start-Process -FilePath "LLVM-$env:LLVM_VERSION-win32.exe" -ArgumentList '/S',"/D=C:\LLVM-$env:LLVM_VERSION" -Wait
+#   - ps: |
+#       if (!(Test-Path cmake-3.10.1-win64-x64.zip)) {
+#           appveyor DownloadFile https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.zip
+#       }
+#       scripts\check-sha256.ps1 cmake-3.10.1-win64-x64.zip 8251F70C85B58F3CA1F24E4A3B0637E2D609B5E4A341D00B70E02E89244D5029
+#       Start-Process -FilePath '7z' -ArgumentList 'x','cmake-3.10.1-win64-x64.zip','-oC:\' -Wait
 
 before_build:
-  - set PATH=C:\LLVM-%LLVM_VERSION%\bin;%PATH%
-  - set PATH=C:\cmake-3.10.1-win64-x64\bin;%PATH%
+#   - set PATH=C:\LLVM-%LLVM_VERSION%\bin;%PATH%
+#   - set PATH=C:\cmake-3.10.1-win64-x64\bin;%PATH%
   - set CLCACHE_DIR=c:\clcache
   - set CLCACHE_CL=clang-cl
   - clcache -z
