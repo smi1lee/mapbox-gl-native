@@ -63,7 +63,7 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%\build
 
 build_script:
-  - call "%VCVARSALL%" x86
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
   - cmake -G "Ninja"
       -DCMAKE_BUILD_TYPE=%CONFIGURATION%
       -DCMAKE_MAKE_PROGRAM="%APPVEYOR_BUILD_FOLDER%\platform\qt\ninja.exe"
