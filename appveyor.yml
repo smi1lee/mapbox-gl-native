@@ -27,8 +27,8 @@ for:
 
 cache:
   - '%APPVEYOR_BUILD_FOLDER%\.git\modules'
-  - '%APPVEYOR_BUILD_FOLDER%\LLVM-%LLVM_VERSION%-win64.exe'
-  - '%APPVEYOR_BUILD_FOLDER%\cmake-3.10.1-win64-x64.zip'
+  - '%APPVEYOR_BUILD_FOLDER%\LLVM-%LLVM_VERSION%-win32.exe'
+  - '%APPVEYOR_BUILD_FOLDER%\cmake-3.10.1-win32-x86.zip'
   - C:\clcache
 
 install:
