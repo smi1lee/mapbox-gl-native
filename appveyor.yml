@@ -1,4 +1,4 @@
-platform: x86
+platform: x64
 
 image:
 - Visual Studio 2017
@@ -18,18 +18,18 @@ for:
 -
   matrix:
     only:
-      - image: Visual Studio 2019
+      - image: Visual Studio 2017
 
   environment:
     LLVM_VERSION: 7.0.0
     LLVM_HASH: 74b197a3959b0408adf0824be01db8dddfa2f9a967f4085af3fad900ed5fdbf6
     VCVARSALL: 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat'
-    QT_PREFIX: 'C:\Qt\5.15.2\msvc2017\lib\cmake'
+    QT_PREFIX: 'C:\Qt\latest\msvc2017_64\lib\cmake'
 
 cache:
   - '%APPVEYOR_BUILD_FOLDER%\.git\modules'
-  - '%APPVEYOR_BUILD_FOLDER%\LLVM-%LLVM_VERSION%-win32.exe'
-  - '%APPVEYOR_BUILD_FOLDER%\cmake-3.10.1-win32-x86.zip'
+  - '%APPVEYOR_BUILD_FOLDER%\LLVM-%LLVM_VERSION%-win64.exe'
+  - '%APPVEYOR_BUILD_FOLDER%\cmake-3.10.1-win64-x64.zip'
   - C:\clcache
 
 install:
@@ -39,20 +39,21 @@ install:
   - git submodule sync
   - git submodule update --init
   - git submodule foreach git submodule update --init
-#   - ps: |
-#       if (!(Test-Path "LLVM-$env:LLVM_VERSION-win32.exe")) {
-#           appveyor DownloadFile "https://releases.llvm.org/$env:LLVM_VERSION/LLVM-$env:LLVM_VERSION-win32.exe"
-#       }
-#       Start-Process -FilePath "LLVM-$env:LLVM_VERSION-win32.exe" -ArgumentList '/S',"/D=C:\LLVM-$env:LLVM_VERSION" -Wait
-#   - ps: |
-#       if (!(Test-Path cmake-3.10.1-win32-x86.zip)) {
-#           appveyor DownloadFile https://cmake.org/files/v3.10/cmake-3.10.1-win32-x86.zip
-#       }
-#       Start-Process -FilePath '7z' -ArgumentList 'x','cmake-3.10.1-win32-x86.zip','-oC:\' -Wait
-
+  - ps: |
+      if (!(Test-Path "LLVM-$env:LLVM_VERSION-win64.exe")) {
+          appveyor DownloadFile "https://releases.llvm.org/$env:LLVM_VERSION/LLVM-$env:LLVM_VERSION-win64.exe"
+      }
+      scripts\check-sha256.ps1 LLVM-$env:LLVM_VERSION-win64.exe "$env:LLVM_HASH"
+      Start-Process -FilePath "LLVM-$env:LLVM_VERSION-win64.exe" -ArgumentList '/S',"/D=C:\LLVM-$env:LLVM_VERSION" -Wait
+  - ps: |
+      if (!(Test-Path cmake-3.10.1-win64-x64.zip)) {
+          appveyor DownloadFile https://cmake.org/files/v3.10/cmake-3.10.1-win64-x64.zip
+      }
+      scripts\check-sha256.ps1 cmake-3.10.1-win64-x64.zip 8251F70C85B58F3CA1F24E4A3B0637E2D609B5E4A341D00B70E02E89244D5029
+      Start-Process -FilePath '7z' -ArgumentList 'x','cmake-3.10.1-win64-x64.zip','-oC:\' -Wait
 before_build:
   - set PATH=C:\LLVM-%LLVM_VERSION%\bin;%PATH%
-  - set PATH=C:\cmake-3.10.1-win32-x86\bin;%PATH%
+  - set PATH=C:\cmake-3.10.1-win64-x64\bin;%PATH%
   - set CLCACHE_DIR=c:\clcache
   - set CLCACHE_CL=clang-cl
   - clcache -z
@@ -63,7 +64,7 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%\build
 
 build_script:
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
+  - call "%VCVARSALL%" x86
   - cmake -G "Ninja"
       -DCMAKE_BUILD_TYPE=%CONFIGURATION%
       -DCMAKE_MAKE_PROGRAM="%APPVEYOR_BUILD_FOLDER%\platform\qt\ninja.exe"
